@@ -1,58 +1,51 @@
-function Hero(name, power, hp) {
-  this.name = name
-  this.power = power
-  this.hp = hp
-};
-
-
-Hero.prototype.attack = function(target) {
-  target.takeDamage(this.power)
-};
-
-Hero.prototype.takeDamage = function(damage) {
-  this.hp -= damage
-};
-
-Hero.prototype.pickUpItem = function(){
-  this.power += 10
-};
-
-
-function SuperHero(name, power, hp, superpower) {
-  Hero.call(this, name, power, hp)
-  // this = {name: name, power: power, hp: hp}
-  this.superpower = superpower
-  // this = {superpower: superpower, name: name, power: power, hp: hp}
-};
-
-function Enemy(name, power, hp, superpower) {
-  Hero.call(this, name, power, hp)
-};
-
-SuperHero.prototype = new Hero();
-Enemy.prototype = new Hero();
-
-Enemy.prototype.checkDead = function(){
-  if(this.hp <= 0){
-    alert("You have defeated the enemy!");
+class Hero {
+  constructor(name, power, hp) {
+    this.name = name
+    this.power = power
+    this.hp = hp
   }
+  attack(target){
+    target.takeDamage(this.power)
+  }
+  takeDamage(damage){
+    this.hp -= damage
+  }
+  pickUpItem(){
+    this.power += 10
+  }
+  usePower(target) {
+    target.takeDamage(this.power)
+    target.checkDead();
+  };
 }
 
-Hero.prototype.usePower = function(target) {
-  target.takeDamage(this.power)
-  target.checkDead();
-};
-
-SuperHero.prototype.useSuperPower = function(target) {
-  target.takeDamage(this.superpower)
-  target.checkDead();
-};
-
-SuperHero.prototype.checkDead = function(){
-  if(this.hp <= 0){
-    alert("You have died! Game Over!");
+class SuperHero extends Hero {
+  constructor(name, power, hp, superpower) {
+    super(name, power, hp)
+    this.superpower = superpower
   }
+    checkDead() {
+      if(this.hp <= 0){
+        alert("You have died Game Over!");
+      }
+    }
+    useSuperPower(target) {
+      target.takeDamage(this.superpower)
+      target.checkDead();
+    };
 }
+
+class Enemy extends Hero {
+  super(name, power, hp, superpower) {
+    // Hero.call(this, name, power, hp)
+  }
+    checkDead() {
+      if(this.hp <= 0){
+        alert("You have defeated the enemy!");
+      }
+    }
+}
+
 
 //characters
 var archer = new SuperHero('Arrow', 50, 100, 51);
